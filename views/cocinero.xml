@@ -1,0 +1,71 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    
+    <record model="ir.ui.view" id="restaurante.cocinero_list">
+      <field name="name">Cocineros</field>
+      <field name="model">restaurante.cocinero</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="id"/>
+          <field name="nombre"/>
+          <field name="rut"/>
+          <field name="telefono"/>
+          <field name="correo"/>
+          <!-- <field name= "estado"/> -->
+        </tree>
+      </field>
+    </record>
+
+    
+
+    
+     <record model="ir.ui.view" id="restaurante.cocinero_form">
+            <field name="name">Cocineros</field>
+            <field name="model">restaurante.cocinero</field>
+            <field name="arch" type="xml">
+                <form string="restaurante form">
+                    <!--<header>
+                        <field name="estado" widget="statusbar" clickable="True"/>
+                    </header> -->
+                    <sheet>
+                        <group col="4">
+                            <field name="id"/>
+                            <separator string="Datos Personales" colspan="4"/>
+                            <field name="nombre"/>
+                            <field name="rut"/>
+                            <field name="telefono"/>
+                            <field name="correo"/>                                                                                                
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+    <!-- actions opening views on models -->
+ 
+    <record model="ir.actions.act_window" id="restaurante_cocinero_action_window">
+      <field name="name">Lista Cocineros</field>
+      <field name="res_model">restaurante.cocinero</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- server action to the one above -->
+    <record model="ir.actions.server" id="restaurante_cocinero_action_server">
+      <field name="name">restaurante server</field>
+      <field name="model_id" ref="model_restaurante_cocinero"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+
+    <menuitem name="Cocinero" id="restaurante_cocinero" parent="personal_restaurante" action="restaurante_cocinero_action_window" groups="restaurante.grupo_personal"/>
+
+  </data>
+</odoo>

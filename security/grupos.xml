@@ -1,0 +1,15 @@
+<odoo>
+    <record id='grupo_pedidos' model='res.groups'>
+        <field name='name'> Gestión de Pedidos </field>
+    </record>
+
+    <record id='grupo_personal' model='res.groups'>
+        <field name='name'> Gestión de Personal </field>
+    </record>
+
+    <record id='grupo_stock' model='res.groups'>
+        <field name='name'> Gestión de Stock </field>
+    </record>
+
+
+</odoo>

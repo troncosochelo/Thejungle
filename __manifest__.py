@@ -24,7 +24,29 @@
 
     # always loaded
     'data': [
-        
+        'security/grupos.xml',
+        'security/ir.model.access.csv',
+        'views/menu.xml',
+        'views/mesero.xml',
+        'views/cliente.xml',
+        'views/pedido.xml',
+        'views/cocinero.xml',
+        'views/plato.xml',
+        'views/detalle_plato.xml',
+        'views/bebestible.xml',
+        'views/detalle_bebestible.xml',
+        'views/ingrediente.xml',
+        'views/detalle_ingrediente.xml',
+        'views/horas_extraordinarias.xml',
+        'views/nomina_sueldo.xml',
+        'views/horas_extraordinarias_meseros.xml',
+        'views/nomina_sueldo_meseros.xml',
+        'views/factura_bebestible.xml',
+        'views/detalle_factura_bebestible.xml',
+        'views/factura_ingrediente.xml',
+        'views/detalle_factura_ingrediente.xml',
+
+        'views/templates.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data>  
+
+    <menuitem name="The Jungle" id="restaurante_menu_root" sequence="450"/>
+
+    <!-- menu categories -->
+    <menuitem name="Gestion de Pedidos" id="pedido_restaurante" parent="restaurante_menu_root"/>
+    <menuitem name="Gestion de Personal" id="personal_restaurante" parent="restaurante_menu_root"/>
+    <menuitem name="Gestion de Stock" id="stock_restaurante" parent="restaurante_menu_root"/>
+    <menuitem name="Meseros" id="meseros_restaurante" parent="restaurante_menu_root"/>
+    <menuitem name="Cocineros" id="cocineros_restaurante" parent="restaurante_menu_root"/>
+    <menuitem name="Platos" id="plato_restaurante" parent="restaurante_menu_root"/>
+    <menuitem name="Bebestibles" id="bebestible_restaurante" parent="restaurante_menu_root"/>
+
+
+
+
+
+
+
+
+
+    
+   
+    
+  </data>
+</odoo>

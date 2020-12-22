@@ -8,6 +8,7 @@ from datetime import date
 from datetime import datetime, date, time
 from odoo.exceptions import ValidationError
 
+
 class Cliente(models.Model):
     _name = 'restaurante.cliente'
     _rec_name = 'nombre'
@@ -46,6 +47,20 @@ class Pedido(models.Model):
         self.precio = total_precio_plato + total_precio_bebestible
 
 
+class Mesero(models.Model):
+    _name = 'restaurante.mesero'
+    _rec_name ='nombre'
+
+    nombre = fields.Char()
+    rut = fields.Char()
+    telefono = fields.Char(string="Teléfono")
+    correo = fields.Char(string="Correo Electrónico")
+
+    pedido_ids = fields.One2many('restaurante.pedido', 'mesero_id')
+    horas_extraordinarias_meseros_ids = fields.One2many('restaurante.horas_extraordinarias_meseros', 'mesero_id')
+    nomina_sueldo_meseros_ids = fields.One2many('restaurante.nomina_sueldo_meseros', 'mesero_id')
+
+
 class Plato(models.Model):
     _name = 'restaurante.plato'
     _rec_name ='nombre'
@@ -78,6 +93,21 @@ class Detalle_Plato(models.Model):
     def _precio_platos(self):
         for plato in self.plato_id:
             self.precio = plato.precio * self.cantidad
+ 
+
+class Cocinero(models.Model):
+    _name = 'restaurante.cocinero'
+    _rec_name ='nombre'
+
+    nombre = fields.Char()
+    rut = fields.Char()
+    telefono = fields.Char(string="Teléfono")
+    correo = fields.Char(string="Correo Electrónico")
+
+    detalle_plato_ids = fields.One2many('restaurante.detalle_plato', 'cocinero_id')
+    horas_extraordinarias_ids = fields.One2many('restaurante.horas_extraordinarias', 'cocinero_id')
+    nomina_sueldo_ids = fields.One2many('restaurante.nomina_sueldo', 'cocinero_id')
+
 
 class Ingrediente(models.Model):
     _name = 'restaurante.ingrediente'
@@ -137,6 +167,10 @@ class Detalle_Ingrediente(models.Model):
     def _validar_stock(self):
         if self.stock < 0:
             raise ValidationError('No hay suficiente stock')
+
+
+
+
 
 class Bebestible(models.Model):
     _name = 'restaurante.bebestible'
@@ -208,6 +242,101 @@ class Detalle_Bebestible(models.Model):
         if self.stock < 0:
             raise ValidationError('No hay suficiente stock')
 
+class Horas_Extraordinarias(models.Model):
+    _name = 'restaurante.horas_extraordinarias'
+
+    fecha = fields.Date(default=date.today())
+    mes = fields.Char(compute="_mes")
+    cantidad = fields.Integer()
+
+    cocinero_id = fields.Many2one('restaurante.cocinero')
+    nomina_sueldo_id = fields.Many2one('restaurante.nomina_sueldo')
+
+
+    @api.one
+    @api.depends('fecha')
+    def _mes(self):
+        var = self.fecha.month
+        self.mes = var
+
+class Nomina_Sueldo(models.Model):
+    _name = 'restaurante.nomina_sueldo'
+    _rec_name = 'fecha'
+    
+    fecha = fields.Date(default=date.today())
+    mes = fields.Char(compute="_mes")
+    monto = fields.Integer(compute="_sueldo")
+    estado = fields.Selection([ ('pendiente', 'Pendiente'),('pagado', 'Pagado')], default='pendiente')
+
+
+    cocinero_id = fields.Many2one('restaurante.cocinero')
+    horas_extraordinarias_ids = fields.One2many('restaurante.horas_extraordinarias', 'nomina_sueldo_id')
+
+    @api.one
+    @api.depends('fecha')
+    def _mes(self):
+        var = self.fecha.month
+        self.mes = var
+
+    @api.one
+    @api.depends('horas_extraordinarias_ids', 'cocinero_id')
+    def _sueldo(self):
+        sueldo = 300000
+        valor_hora = 2000
+        self.monto = sueldo
+        for cocinero in self.cocinero_id:
+            for horas_extraordinarias in self.horas_extraordinarias_ids:
+                if horas_extraordinarias.mes == self.mes:
+                    sueldo += valor_hora * horas_extraordinarias.cantidad
+                    self.monto = sueldo
+
+class Horas_Extraordinarias_Meseros(models.Model):
+    _name = 'restaurante.horas_extraordinarias_meseros'
+
+    fecha = fields.Date(default=date.today())
+    mes = fields.Char(compute="_mes")
+    cantidad = fields.Integer()
+
+    mesero_id = fields.Many2one('restaurante.mesero')
+    nomina_sueldo_meseros_id = fields.Many2one('restaurante.nomina_sueldo_meseros')
+
+    @api.one
+    @api.depends('fecha')
+    def _mes(self):
+        var = self.fecha.month
+        self.mes = var
+
+class Nomina_Sueldo_Meseros(models.Model):
+    _name = 'restaurante.nomina_sueldo_meseros'
+    _rec_name = 'fecha'
+    
+    fecha = fields.Date(default=date.today())
+    mes = fields.Char(compute="_mes")
+    monto = fields.Integer(compute="_sueldo")
+    estado = fields.Selection([ ('pendiente', 'Pendiente'),('pagado', 'Pagado')], default='pendiente')
+
+
+    mesero_id = fields.Many2one('restaurante.mesero')
+    horas_extraordinarias_meseros_ids = fields.One2many('restaurante.horas_extraordinarias_meseros', 'nomina_sueldo_meseros_id')
+
+    @api.one
+    @api.depends('fecha')
+    def _mes(self):
+        var = self.fecha.month
+        self.mes = var
+
+    @api.one
+    @api.depends('horas_extraordinarias_meseros_ids', 'mesero_id')
+    def _sueldo(self):
+        sueldo = 300000
+        valor_hora = 2000
+        self.monto = sueldo
+        for mesero in self.mesero_id:
+            for horas_extraordinarias_meseros in self.horas_extraordinarias_meseros_ids:
+                if horas_extraordinarias_meseros.mes == self.mes:
+                    sueldo += valor_hora * horas_extraordinarias_meseros.cantidad
+                    self.monto = sueldo
+
 class Factura_Bebestible(models.Model):
     _name = 'restaurante.factura_bebestible'
 
@@ -270,6 +399,6 @@ class Detalle_Factura_Ingrediente(models.Model):
         for ingrediente in self.ingrediente_id:
             self.precio = self.cantidad * ingrediente.costo
 
- 
 
-    
+
+
