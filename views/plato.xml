@@ -1,0 +1,67 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    
+    <record model="ir.ui.view" id="restaurante.plato_list">
+      <field name="name">Platos</field>
+      <field name="model">restaurante.plato</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="id"/>
+          <field name="nombre"/>
+          <field name="precio"/>
+
+          <!-- <field name= "estado"/> -->
+        </tree>
+      </field>
+    </record>
+
+    
+
+    
+     <record model="ir.ui.view" id="restaurante.plato_form">
+            <field name="name">Platos</field>
+            <field name="model">restaurante.plato</field>
+            <field name="arch" type="xml">
+                <form string="restaurante form">
+                    <!--<header>
+                        <field name="estado" widget="statusbar" clickable="True"/>
+                    </header> -->
+                    <sheet>
+                        <group col="4">
+                            <field name="id"/>
+                            <field name="nombre"/>
+                            <field name="precio"/>                                                                                                                                                                                
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+    <!-- actions opening views on models -->
+ 
+    <record model="ir.actions.act_window" id="restaurante_plato_action_window">
+      <field name="name">Lista Platos</field>
+      <field name="res_model">restaurante.plato</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- server action to the one above -->
+    <record model="ir.actions.server" id="restaurante_plato_action_server">
+      <field name="name">restaurante server</field>
+      <field name="model_id" ref="model_restaurante_plato"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+
+    <menuitem name="Plato" id="restaurante_plato" parent="stock_restaurante" action="restaurante_plato_action_window"/>
+
+  </data>
+</odoo>

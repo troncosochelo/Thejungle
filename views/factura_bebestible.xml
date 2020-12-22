@@ -1,0 +1,70 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    
+    <record model="ir.ui.view" id="restaurante.factura_bebestible_list">
+      <field name="name">Factura Bebestible</field>
+      <field name="model">restaurante.factura_bebestible</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="id"/>
+          <field name="nombre_proveedor"/>
+          <field name="fecha"/>
+          <field name="total"/>
+
+          <!-- <field name= "estado"/> -->
+        </tree>
+      </field>
+    </record>
+
+    
+
+    
+     <record model="ir.ui.view" id="restaurante.factura_bebestible_form">
+            <field name="name">Factura Bebestible</field>
+            <field name="model">restaurante.factura_bebestible</field>
+            <field name="arch" type="xml">
+                <form string="restaurante form">
+                    <!--<header>
+                        <field name="estado" widget="statusbar" clickable="True"/>
+                    </header> -->
+                    <sheet>
+                        <group col="4">
+                            <field name="id"/>
+                            <field name="nombre_proveedor"/>
+                            <field name="fecha"/>
+                            <field name="total"/>
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+    <!-- actions opening views on models -->
+ 
+    <record model="ir.actions.act_window" id="restaurante_factura_bebestible_action_window">
+      <field name="name">Lista Factura Bebestible</field>
+      <field name="res_model">restaurante.factura_bebestible</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- server action to the one above
+    <record model="ir.actions.server" id="restaurante_factura_bebestible_action_server">
+      <field name="name">restaurante server</field>
+      <field name="model_id" ref="model_restaurante_factura_bebestible"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record> -->
+
+    <menuitem name="Factura de Bebestible" id="restaurante_factura_bebestible" parent="stock_restaurante" action="restaurante_factura_bebestible_action_window"/>
+
+  </data>
+</odoo>
