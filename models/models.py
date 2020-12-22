@@ -8,6 +8,44 @@ from datetime import date
 from datetime import datetime, date, time
 from odoo.exceptions import ValidationError
 
+class Cliente(models.Model):
+    _name = 'restaurante.cliente'
+    _rec_name = 'nombre'
+
+    nombre = fields.Char()
+    rut = fields.Char()
+
+    pedido_ids = fields.One2many('restaurante.pedido', 'cliente_id')
+
+class Pedido(models.Model):
+    _name = 'restaurante.pedido'
+    _rec_name = 'id'
+
+
+   # fecha = fields.DateTime(default=datetime.today())
+    mesa = fields.Selection([('uno','1'),('dos','2'),('tres','3'),('cuatro','4'),('cinco','5'),('seis','6'),('siete','7'),('ocho','8')])
+    precio = fields.Integer(compute="_precio_pedido")
+    estado = fields.Selection([ ('pendiente', 'Pendiente'),('entregado', 'Entregado')], default='pendiente')
+
+    mesero_id = fields.Many2one('restaurante.mesero')
+    current_user_id = fields.Many2one(comodel_name='res.users', string='Atendido por', default=lambda self: self.env.user.id)
+    cliente_id = fields.Many2one('restaurante.cliente')
+    detalle_plato_ids = fields.One2many('restaurante.detalle_plato', 'pedido_id')
+    detalle_bebestible_ids = fields.One2many('restaurante.detalle_bebestible', 'pedido_id')
+
+
+    @api.one
+    @api.depends('detalle_plato_ids', 'detalle_bebestible_ids')
+    def _precio_pedido(self):
+        total_precio_plato = 0
+        total_precio_bebestible = 0
+        for detalle_plato in self.detalle_plato_ids:
+            total_precio_plato += detalle_plato.precio
+        for detalle_bebestible in self.detalle_bebestible_ids:
+            total_precio_bebestible += detalle_bebestible.precio        
+        self.precio = total_precio_plato + total_precio_bebestible
+
+
 class Plato(models.Model):
     _name = 'restaurante.plato'
     _rec_name ='nombre'
